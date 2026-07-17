@@ -66,6 +66,26 @@ def _repo_commit(repo_root: Path) -> str:
         return ""
 
 
+def _artifact_url(repo_url: str, commit: str, artifact_path: Path) -> str:
+    """Permalink to the served weights, pinned to the commit rather than a branch
+    so it keeps resolving to the exact bytes artifact_sha256 describes.
+
+    Returns "" when the miner was pointed at an artifact other than the in-repo
+    one, rather than advertising a file that is not what is being served.
+    """
+    if not repo_url or not commit:
+        return ""
+    try:
+        if artifact_path.resolve() != DEFAULT_ARTIFACT.resolve():
+            return ""
+    except OSError:
+        return ""
+    base = repo_url.strip().rstrip("/")
+    if base.endswith(".git"):
+        base = base[:-4]
+    return f"{base}/raw/{commit}/detector/artifacts/model.joblib"
+
+
 class Miner(BaseMinerNeuron):
     """Poker44 bot-detection miner."""
 
@@ -96,6 +116,8 @@ class Miner(BaseMinerNeuron):
             0, int(os.getenv("POKER44_MAX_HANDS_PER_CHUNK_EVAL", "120"))
         )
         artifact_sha256 = _artifact_sha256(artifact_path)
+        repo_url = os.getenv("POKER44_MODEL_REPO_URL", "")
+        repo_commit = _repo_commit(REPO_ROOT)
         self.model_manifest = build_local_model_manifest(
             repo_root=REPO_ROOT,
             implementation_files=[REPO_ROOT / path for path in IMPLEMENTATION_FILES],
@@ -104,9 +126,10 @@ class Miner(BaseMinerNeuron):
                 "model_version": os.getenv("POKER44_MODEL_VERSION", "2.0.0"),
                 "framework": "scikit-learn",
                 "license": "MIT",
-                "repo_url": os.getenv("POKER44_MODEL_REPO_URL", ""),
-                "repo_commit": _repo_commit(REPO_ROOT),
+                "repo_url": repo_url,
+                "repo_commit": repo_commit,
                 "artifact_sha256": artifact_sha256,
+                "artifact_url": _artifact_url(repo_url, repo_commit, artifact_path),
                 "open_source": True,
                 "inference_mode": "remote",
                 "training_data_statement": "Trained only on the public Poker44 benchmark.",
