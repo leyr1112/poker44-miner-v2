@@ -1,0 +1,22 @@
+# Trained weights + local data — shipped to the host out-of-band, never committed
+*.joblib
+*.pkl
+data/
+
+# Private training pipeline
+training/
+detector/train.py
+
+# Secrets
+.env
+
+# Caches, builds, scratch
+__pycache__/
+*.pyc
+.venv/
+dist/
+build/
+*.egg-info/
+*.log
+_feature_cache.npz
+catboost_info/
