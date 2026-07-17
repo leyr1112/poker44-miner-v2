@@ -4,7 +4,6 @@
 data/
 
 # Private training pipeline
-training/
 detector/train.py
 
 # Secrets
