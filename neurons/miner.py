@@ -24,11 +24,13 @@ from detector.inference import Poker44Model
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_ARTIFACT = REPO_ROOT / "detector" / "artifacts" / "model.joblib"
+# Every entry must be present in the published repo, so the manifest never names
+# a file a reader cannot open. Weights are fingerprinted via artifact_sha256.
 IMPLEMENTATION_FILES = (
     "neurons/miner.py",
     "detector/inference.py",
     "detector/features.py",
-    "detector/artifacts/model.joblib",
+    "detector/features_ext.py",
     "detector/artifacts/meta.json",
 )
 
