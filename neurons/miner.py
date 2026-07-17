@@ -108,7 +108,7 @@ class Miner(BaseMinerNeuron):
                 "repo_commit": _repo_commit(REPO_ROOT),
                 "artifact_sha256": artifact_sha256,
                 "open_source": True,
-                "inference_mode": "local-joblib",
+                "inference_mode": "remote",
                 "training_data_statement": "Trained only on the public Poker44 benchmark.",
                 "training_data_sources": ["poker44-public-benchmark"],
                 "private_data_attestation": "No validator-only data is used.",
