@@ -1,0 +1,3 @@
+# core.autocrlf would rewrite line endings inside the weights and corrupt them.
+*.joblib binary
+*.pkl binary

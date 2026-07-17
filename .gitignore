@@ -1,7 +1,10 @@
-# Trained weights + local data — shipped to the host out-of-band, never committed
-*.joblib
+# Local data — never committed
 *.pkl
 data/
+
+# The served weights ARE published; rollbacks and experiment artifacts are not.
+*.joblib
+!detector/artifacts/model.joblib
 
 # Private training pipeline
 detector/train.py
