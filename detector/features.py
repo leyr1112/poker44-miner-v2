@@ -7,6 +7,7 @@ from typing import Any
 
 from detector.features_ext import (behavior_features as _ext_behavior,
                                     profile_features as _ext_profile)
+from detector.features_ngram import ngram_features
 
 
 def _safe_float(value: Any, default: float = 0.0) -> float:
@@ -452,4 +453,6 @@ def union_features(chunk: list[dict[str, Any]]) -> dict[str, float]:
     extended = {**_ext_profile(chunk), **_ext_behavior(chunk)}
     for key, value in extended.items():
         row[f"e_{key}"] = float(value)
+    for key, value in ngram_features(chunk).items():
+        row[key] = float(value)
     return row
